@@ -13,7 +13,7 @@ class App extends Component {
   }
   handleSubmit = (search) => {
     const url = `https://www.googleapis.com/books/v1/volumes?q=${search}`;
-    const key= '&key=AIzaSyD8jq1D7eiyc_JLCGmVPnboqrEz53Bs2sU';
+    const key= '';
 
     fetch(url + key)
     .then(res => {
