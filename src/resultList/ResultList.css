@@ -1,0 +1,4 @@
+.result-items {
+    display: flex;
+    flex-direction: column;
+}

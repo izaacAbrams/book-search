@@ -1,0 +1,8 @@
+select {
+    margin: 20px;
+    width: 200px;
+}
+
+.filters {
+    background-color: lightgray
+}

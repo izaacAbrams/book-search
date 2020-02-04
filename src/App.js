@@ -1,26 +1,80 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import SearchForm from './searchForm/SearchForm';
+import ResultList from './resultList/ResultList';
 
-function App() {
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state= {
+      books: []
+
+    }
+  }
+  handleSubmit = (search) => {
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${search}`;
+    const key= '&key=AIzaSyD8jq1D7eiyc_JLCGmVPnboqrEz53Bs2sU';
+
+    fetch(url + key)
+    .then(res => {
+      if(!res.ok) {
+        throw new Error('Something went wrong, please try again.')
+      }
+      return res.json();
+    })
+    .then(data => {
+      this.setState({
+        books: data,
+        error: null
+      })
+      
+    })
+    .catch(err => {
+      this.setState({
+        error: err.message
+      })
+    })
+
+  }
+  handleFilter = (filters) => {
+    this.setState({
+      bookFilter: filters
+    })
+     
+  }  
+
+  handlePrintFilter = (filters) => {
+    this.setState({
+      printFilters: filters
+    })
+  }
+
+  render() {
+    const error = this.state.error
+    ? <div className="error">{this.state.error}</div>
+    : '';
+    const resultList = (this.state.books.length !== 0)
+    ? <ResultList 
+      books={this.state.books}
+      filter={this.state.bookFilter}
+      printFilter={this.state.printFilter}/>
+    : '';
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="heading">
+      <h1>Google Book Search</h1>
+      </div>
+      <SearchForm 
+        handleSubmit={this.handleSubmit}
+        handleFilter={this.handleFilter}
+        handlePrintFilter={this.handlePrintFilter}
+        books={this.state.books}
+      />
+      {error}
+      {resultList}
     </div>
   );
+  }
 }
 
 export default App;
